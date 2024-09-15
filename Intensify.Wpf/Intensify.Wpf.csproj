@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+
+	<PropertyGroup>
+		<TargetFrameworks>
+			net451; 
+			netcoreapp3.1;
+			net6.0-windows; 
+		</TargetFrameworks>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>11</LangVersion>
+		<Description>#</Description>
+	</PropertyGroup>
+
+
+
+
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
+	  <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
+	</ItemGroup>
+
+
+
+
+
+	<!--<ItemGroup>
+	  <ProjectReference Include="..\Intensify.Core\Intensify.Core.csproj" />
+	</ItemGroup>-->
+
+	<Import Project="$(SolutionDir)\GlobalCompileSettings.Targets" />
+
+
+
+
+</Project>

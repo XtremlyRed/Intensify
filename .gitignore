@@ -1,0 +1,12 @@
+﻿################################################################################
+# 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
+################################################################################
+
+/bin/AnyCPU
+/.vs/Intensify/CopilotIndices/0.2.1624.5528
+/Intensify.Core/obj
+/Intensify.CoreTests/bin
+/Intensify.CoreTests/obj
+/Intensify.Wpf/obj
+/Intensify.Wpf.Demo/bin
+/Intensify.Wpf.Demo/obj

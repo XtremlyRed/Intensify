@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+
+	<PropertyGroup>
+		<TargetFrameworks>
+			net451; 
+			netcoreapp3.1;
+			net6.0; 
+			netstandard2.0;  
+		</TargetFrameworks>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>11</LangVersion>
+		<Description>#</Description>
+	</PropertyGroup>
+
+
+
+	<ItemGroup Condition=" $(TargetFramework.StartsWith('net4')) ">
+		<PackageReference Include="System.ValueTuple" Version="4.5.0" />
+	</ItemGroup>
+
+
+
+
+	<Import Project="$(SolutionDir)\GlobalCompileSettings.Targets" />
+</Project>
