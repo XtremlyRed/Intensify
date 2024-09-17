@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Input;
-using Intensify.Wpf;
 
-namespace Intensify.Wpf;
+namespace Intensify.Core;
 
 /// <summary>
 /// <see cref="IBindingCommand"/>

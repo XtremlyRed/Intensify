@@ -13,9 +13,6 @@ namespace Intensify.Wpf;
 /// </summary>
 public static class PopupServiceExtensions
 {
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    static IPopupVisualLocator? visualLocator;
-
     /// <summary>
     /// popup visual in main popup host
     /// </summary>
@@ -37,21 +34,21 @@ public static class PopupServiceExtensions
     /// <param name="visual"></param>
     /// <param name="parameter"></param>
     /// <returns></returns>
-    public static async ValueTask<object> PopupAsync(
+    public static async ValueTask<object> PopupAsyncIn(
         this IPopupService popupService,
         string hostedName,
         Visual visual,
         PopupParameter? parameter = null
     )
     {
-        var popupResult = await popupService.PopupAsync<object>(hostedName, visual, parameter);
+        var popupResult = await popupService.PopupAsyncIn<object>(hostedName, visual, parameter);
         return popupResult;
     }
 
     /// <summary>
     /// <para>popup visual in main popup host </para>
-    /// <para>Use <see cref="IPopupVisualLocator"/> to locate the view</para>
-    /// <para>Before using this method, please first set the <see cref="IPopupVisualLocator"/> using method <see cref="SetPopupVisualLocator(IPopupVisualLocator)"/></para>
+    /// <para>Use <see cref="IViewLocator"/> to locate the view</para>
+    /// <para>Before using this method, please first set the <see cref="IViewLocator"/> using method <see cref="ViewLocator.SetViewLocator(IViewLocator)"/></para>
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="popupService"></param>
@@ -60,17 +57,17 @@ public static class PopupServiceExtensions
     /// <returns></returns>
     public static async ValueTask<T> PopupAsync<T>(this IPopupService popupService, string visualToken, PopupParameter? parameter = null)
     {
-        _ = visualLocator ?? throw new InvalidOperationException("invalid visual locator");
+        _ = ViewLocator.viewLocator ?? throw new InvalidOperationException("invalid visual locator");
 
-        var visual = visualLocator.Locate(visualToken);
+        var visual = ViewLocator.viewLocator.Locate(visualToken);
 
         return await popupService.PopupAsync<T>(visual, parameter);
     }
 
     /// <summary>
     /// <para>popup visual in <paramref name="hostedName"/> popup host </para>
-    /// <para>Use <see cref="IPopupVisualLocator"/> to locate the view</para>
-    /// <para>Before using this method, please first set the <see cref="IPopupVisualLocator"/> using method <see cref="SetPopupVisualLocator(IPopupVisualLocator)"/></para>
+    /// <para>Use <see cref="IViewLocator"/> to locate the view</para>
+    /// <para>Before using this method, please first set the <see cref="IViewLocator"/> using method <see cref="ViewLocator.SetViewLocator(IViewLocator)"/></para>
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="popupService"></param>
@@ -78,24 +75,24 @@ public static class PopupServiceExtensions
     /// <param name="visualToken"></param>
     /// <param name="parameter"></param>
     /// <returns></returns>
-    public static async ValueTask<T> PopupAsync<T>(
+    public static async ValueTask<T> PopupAsyncIn<T>(
         this IPopupService popupService,
         string hostedName,
         string visualToken,
         PopupParameter? parameter = null
     )
     {
-        _ = visualLocator ?? throw new InvalidOperationException("invalid visual locator");
+        _ = ViewLocator.viewLocator ?? throw new InvalidOperationException("invalid visual locator");
 
-        var visual = visualLocator.Locate(visualToken);
+        var visual = ViewLocator.viewLocator.Locate(visualToken);
 
-        return await popupService.PopupAsync<T>(visual, parameter);
+        return await popupService.PopupAsyncIn<T>(hostedName, visual, parameter);
     }
 
     /// <summary>
     /// <para>popup visual in main popup host </para>
-    /// <para>Use <see cref="IPopupVisualLocator"/> to locate the view</para>
-    /// <para>Before using this method, please first set the <see cref="IPopupVisualLocator"/> using method <see cref="SetPopupVisualLocator(IPopupVisualLocator)"/></para>
+    /// <para>Use <see cref="IViewLocator"/> to locate the view</para>
+    /// <para>Before using this method, please first set the <see cref="IViewLocator"/> using method <see cref="ViewLocator.SetViewLocator(IViewLocator)"/></para>
     /// </summary>
     /// <param name="popupService"></param>
     /// <param name="visualToken"></param>
@@ -103,59 +100,34 @@ public static class PopupServiceExtensions
     /// <returns></returns>
     public static async ValueTask<object> PopupAsync(this IPopupService popupService, string visualToken, PopupParameter? parameter = null)
     {
-        _ = visualLocator ?? throw new InvalidOperationException("invalid visual locator");
+        _ = ViewLocator.viewLocator ?? throw new InvalidOperationException("invalid visual locator");
 
-        var visual = visualLocator.Locate(visualToken);
+        var visual = ViewLocator.viewLocator.Locate(visualToken);
 
         return await popupService.PopupAsync<object>(visual, parameter);
     }
 
     /// <summary>
     /// <para>popup visual in <paramref name="hostedName"/> popup host </para>
-    /// <para>Use <see cref="IPopupVisualLocator"/> to locate the view</para>
-    /// <para>Before using this method, please first set the <see cref="IPopupVisualLocator"/> using method <see cref="SetPopupVisualLocator(IPopupVisualLocator)"/></para>
+    /// <para>Use <see cref="IViewLocator"/> to locate the view</para>
+    /// <para>Before using this method, please first set the <see cref="IViewLocator"/> using method <see cref="ViewLocator.SetViewLocator(IViewLocator)"/></para>
     /// </summary>
     /// <param name="popupService"></param>
     /// <param name="hostedName"></param>
     /// <param name="visualToken"></param>
     /// <param name="parameter"></param>
     /// <returns></returns>
-    public static async ValueTask<object> PopupAsync(
+    public static async ValueTask<object> PopupAsyncIn(
         this IPopupService popupService,
         string hostedName,
         string visualToken,
         PopupParameter? parameter = null
     )
     {
-        _ = visualLocator ?? throw new InvalidOperationException("invalid visual locator");
+        _ = ViewLocator.viewLocator ?? throw new InvalidOperationException("invalid visual locator");
 
-        var visual = visualLocator.Locate(visualToken);
+        var visual = ViewLocator.viewLocator.Locate(visualToken);
 
-        return await popupService.PopupAsync<object>(visual, parameter);
+        return await popupService.PopupAsyncIn<object>(hostedName, visual, parameter);
     }
-
-    /// <summary>
-    /// set popup visual locator when used
-    /// <para><see cref="PopupAsync{T}(IPopupService, string, PopupParameter?)"/></para>
-    /// <para>and</para>
-    /// <para><see cref="PopupAsync{T}(IPopupService, string, string, PopupParameter?)"/></para>
-    /// </summary>
-    /// <param name="popupVisualLocator"></param>
-    public static void SetPopupVisualLocator(IPopupVisualLocator popupVisualLocator)
-    {
-        visualLocator = popupVisualLocator ?? throw new ArgumentNullException(nameof(popupVisualLocator));
-    }
-}
-
-/// <summary>
-/// an <see langword="interface"/> of <see cref="IPopupVisualLocator"/>
-/// </summary>
-public interface IPopupVisualLocator
-{
-    /// <summary>
-    /// locate visual
-    /// </summary>
-    /// <param name="visualToken"></param>
-    /// <returns></returns>
-    Visual Locate(string visualToken);
 }

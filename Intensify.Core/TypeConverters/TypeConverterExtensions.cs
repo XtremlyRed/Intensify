@@ -17,21 +17,13 @@ public static class TypeConverterExtensions
     private static readonly ConcurrentDictionary<Type, ConcurrentDictionary<Type, TypeConverter>> typeConvertMaps = new();
 
     /// <summary>
-    /// Converts to.
+    /// convert <see cref="object"/> to <typeparamref name="To"/>
     /// </summary>
-    /// <typeparam name="To">The type of the o.</typeparam>
-    /// <param name="from">From.</param>
+    /// <typeparam name="To"></typeparam>
+    /// <param name="from"></param>
     /// <returns></returns>
-    /// <exception cref="InvalidCastException">
-    /// null values cannot be converted
-    /// or
-    /// type conversion unsuccessful
-    /// </exception>
-    /// <exception cref="InvalidOperationException">
-    /// type converter not registered
-    /// or
-    /// type converter from {fromType} to {toType} not registered
-    /// </exception>
+    /// <exception cref="InvalidCastException"></exception>
+    /// <exception cref="InvalidOperationException"></exception>
     public static To ConvertTo<To>(this object? from)
     {
         if (from is To to)
@@ -52,33 +44,33 @@ public static class TypeConverterExtensions
             }
         }
 
-        Type fromType = from?.GetType() ?? throw new InvalidCastException("null values cannot be converted");
+        Type fromType = from?.GetType() ?? throw new InvalidCastException("null value cannot be converted");
 
-        if (typeConvertMaps.TryGetValue(fromType, out ConcurrentDictionary<Type, TypeConverter>? targetTypeConverterMaps) == false)
+        if (typeConvertMaps.TryGetValue(fromType, out ConcurrentDictionary<Type, TypeConverter>? fromTypeConverterStorages) == false)
         {
-            typeConvertMaps[fromType] = targetTypeConverterMaps = new ConcurrentDictionary<Type, TypeConverter>();
+            typeConvertMaps[fromType] = fromTypeConverterStorages = new ConcurrentDictionary<Type, TypeConverter>();
         }
 
         Type toType = typeof(To);
 
-        if (targetTypeConverterMaps.TryGetValue(toType, out TypeConverter? typeConverter) == false)
+        if (fromTypeConverterStorages.TryGetValue(toType, out TypeConverter? toTypeConverter) == false)
         {
-            typeConverter = TypeDescriptor.GetConverter(toType);
+            toTypeConverter = TypeDescriptor.GetConverter(toType);
 
-            if (typeConverter is null)
+            if (toTypeConverter is null)
             {
                 throw new InvalidOperationException("type converter not registered");
             }
 
-            targetTypeConverterMaps[toType] = typeConverter;
+            fromTypeConverterStorages[toType] = toTypeConverter;
         }
 
-        if (typeConverter.CanConvertFrom(fromType) == false)
+        if (toTypeConverter.CanConvertFrom(fromType) == false)
         {
             throw new InvalidOperationException($"type converter from {fromType} to {toType} not registered");
         }
 
-        object? destination = typeConverter.ConvertFrom(from);
+        object? destination = toTypeConverter.ConvertFrom(from);
 
         if (destination is To toValue)
         {
@@ -86,5 +78,56 @@ public static class TypeConverterExtensions
         }
 
         throw new InvalidCastException("type conversion unsuccessful");
+    }
+
+    /// <summary>
+    /// appen custom converter
+    /// </summary>
+    /// <typeparam name="TFrom"></typeparam>
+    /// <typeparam name="TTo"></typeparam>
+    /// <param name="converter"></param>
+    public static void AppendConverter<TFrom, TTo>(Func<TFrom, TTo> converter)
+    {
+        var fromType = typeof(TFrom);
+        var toType = typeof(TTo);
+
+        if (typeConvertMaps.TryGetValue(fromType, out ConcurrentDictionary<Type, TypeConverter>? targetTypeConverterMaps) == false)
+        {
+            typeConvertMaps[fromType] = targetTypeConverterMaps = new ConcurrentDictionary<Type, TypeConverter>();
+        }
+
+        targetTypeConverterMaps[toType] = new CustomTypeConverter<TFrom, TTo>(converter);
+    }
+
+    private class CustomTypeConverter<TFrom, TTo> : TypeConverter
+    {
+        Func<TFrom, TTo> converter;
+        static Type FromType = typeof(TFrom);
+        static Type ToType = typeof(TTo);
+
+        public CustomTypeConverter(Func<TFrom, TTo> converter)
+        {
+            this.converter = converter;
+        }
+
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
+        {
+            if (sourceType == FromType)
+            {
+                return true;
+            }
+
+            return base.CanConvertFrom(context, sourceType);
+        }
+
+        public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
+        {
+            if (value is TFrom from)
+            {
+                return converter(from);
+            }
+
+            return base.ConvertFrom(context, culture, value);
+        }
     }
 }

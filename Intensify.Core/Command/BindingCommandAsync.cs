@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Intensify.Wpf;
+namespace Intensify.Core;
 
 /// <summary>
 /// <see cref="IBindingCommandAsync"/>

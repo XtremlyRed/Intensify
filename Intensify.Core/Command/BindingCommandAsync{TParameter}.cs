@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace Intensify.Wpf;
+namespace Intensify.Core;
 
 /// <summary>
 /// <see cref="IBindingCommandAsync{TParameter}"/>

@@ -39,7 +39,7 @@ public interface IPopupService
     /// <param name="title"></param>
     /// <param name="config"></param>
     /// <returns></returns>
-    ValueTask ShowAsync(string hostedName, string content, string? title = null, PopupContext? config = null);
+    ValueTask ShowAsyncIn(string hostedName, string content, string? title = null, PopupContext? config = null);
 
     /// <summary>
     /// confirm message in <paramref name="hostedName"/> popup host
@@ -49,7 +49,7 @@ public interface IPopupService
     /// <param name="title"></param>
     /// <param name="config"></param>
     /// <returns></returns>
-    ValueTask<ButtonResult> ConfirmAsync(string hostedName, string content, string? title = null, PopupContext? config = null);
+    ValueTask<ButtonResult> ConfirmAsyncIn(string hostedName, string content, string? title = null, PopupContext? config = null);
 
     /// <summary>
     /// popup visual in main popup host
@@ -68,5 +68,5 @@ public interface IPopupService
     /// <param name="visual"></param>
     /// <param name="parameter"></param>
     /// <returns></returns>
-    ValueTask<T> PopupAsync<T>(string hostedName, Visual visual, PopupParameter? parameter = null);
+    ValueTask<T> PopupAsyncIn<T>(string hostedName, Visual visual, PopupParameter? parameter = null);
 }

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Intensify.Core;
+namespace System.Diagnostics;
 
 /// <summary>
 ///

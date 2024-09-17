@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Intensify.Core;
+namespace System;
 
 /// <summary>
 /// simple math extensions
@@ -16,11 +16,9 @@ public static partial class MathExtensions
     /// <returns></returns>
     public static long FromRange(this long value, long minValue = long.MinValue, long maxValue = long.MaxValue)
     {
-        return value < minValue
-            ? minValue
-            : value > maxValue
-                ? maxValue
-                : value;
+        return value < minValue ? minValue
+            : value > maxValue ? maxValue
+            : value;
     }
 
     /// <summary>
@@ -32,11 +30,9 @@ public static partial class MathExtensions
     /// <returns></returns>
     public static int FromRange(this int value, int minValue = int.MinValue, int maxValue = int.MaxValue)
     {
-        return value < minValue
-            ? minValue
-            : value > maxValue
-                ? maxValue
-                : value;
+        return value < minValue ? minValue
+            : value > maxValue ? maxValue
+            : value;
     }
 
     /// <summary>
@@ -48,11 +44,9 @@ public static partial class MathExtensions
     /// <returns></returns>
     public static byte FromRange(this byte value, byte minValue = byte.MinValue, byte maxValue = byte.MaxValue)
     {
-        return value < minValue
-            ? minValue
-            : value > maxValue
-                ? maxValue
-                : value;
+        return value < minValue ? minValue
+            : value > maxValue ? maxValue
+            : value;
     }
 
     /// <summary>
@@ -64,11 +58,9 @@ public static partial class MathExtensions
     /// <returns></returns>
     public static short FromRange(this short value, short minValue = short.MinValue, short maxValue = short.MaxValue)
     {
-        return value < minValue
-            ? minValue
-            : value > maxValue
-                ? maxValue
-                : value;
+        return value < minValue ? minValue
+            : value > maxValue ? maxValue
+            : value;
     }
 
     /// <summary>
@@ -80,11 +72,9 @@ public static partial class MathExtensions
     /// <returns></returns>
     public static float FromRange(this float value, float minValue = float.MinValue, float maxValue = float.MaxValue)
     {
-        return value < minValue
-            ? minValue
-            : value > maxValue
-                ? maxValue
-                : value;
+        return value < minValue ? minValue
+            : value > maxValue ? maxValue
+            : value;
     }
 
     /// <summary>
@@ -96,11 +86,9 @@ public static partial class MathExtensions
     /// <returns></returns>
     public static decimal FromRange(this decimal value, decimal minValue = decimal.MinValue, decimal maxValue = decimal.MaxValue)
     {
-        return value < minValue
-            ? minValue
-            : value > maxValue
-                ? maxValue
-                : value;
+        return value < minValue ? minValue
+            : value > maxValue ? maxValue
+            : value;
     }
 
     /// <summary>
@@ -112,11 +100,9 @@ public static partial class MathExtensions
     /// <returns></returns>
     public static double FromRange(this double value, double minValue = double.MinValue, double maxValue = double.MaxValue)
     {
-        return value < minValue
-            ? minValue
-            : value > maxValue
-                ? maxValue
-                : value;
+        return value < minValue ? minValue
+            : value > maxValue ? maxValue
+            : value;
     }
 
     /// <summary>
@@ -128,11 +114,9 @@ public static partial class MathExtensions
     /// <returns></returns>
     public static ulong FromRange(this ulong value, ulong minValue = ulong.MinValue, ulong maxValue = ulong.MaxValue)
     {
-        return value < minValue
-            ? minValue
-            : value > maxValue
-                ? maxValue
-                : value;
+        return value < minValue ? minValue
+            : value > maxValue ? maxValue
+            : value;
     }
 
     /// <summary>
@@ -144,11 +128,9 @@ public static partial class MathExtensions
     /// <returns></returns>
     public static uint FromRange(this uint value, uint minValue = uint.MinValue, uint maxValue = uint.MaxValue)
     {
-        return value < minValue
-            ? minValue
-            : value > maxValue
-                ? maxValue
-                : value;
+        return value < minValue ? minValue
+            : value > maxValue ? maxValue
+            : value;
     }
 
     /// <summary>
@@ -160,11 +142,9 @@ public static partial class MathExtensions
     /// <returns></returns>
     public static sbyte FromRange(this sbyte value, sbyte minValue = sbyte.MinValue, sbyte maxValue = sbyte.MaxValue)
     {
-        return value < minValue
-            ? minValue
-            : value > maxValue
-                ? maxValue
-                : value;
+        return value < minValue ? minValue
+            : value > maxValue ? maxValue
+            : value;
     }
 
     /// <summary>
@@ -176,11 +156,9 @@ public static partial class MathExtensions
     /// <returns></returns>
     public static ushort FromRange(this ushort value, ushort minValue = ushort.MinValue, ushort maxValue = ushort.MaxValue)
     {
-        return value < minValue
-            ? minValue
-            : value > maxValue
-                ? maxValue
-                : value;
+        return value < minValue ? minValue
+            : value > maxValue ? maxValue
+            : value;
     }
 
     /// <summary>

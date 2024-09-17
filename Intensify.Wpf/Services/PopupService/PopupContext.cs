@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows.Input;
 using static Intensify.Wpf.PopupService;
 
 namespace Intensify.Wpf;
@@ -61,8 +63,8 @@ public abstract class PopupContext : IEquatable<PopupContext>, IEquatable<object
     /// <summary>
     /// button click command
     /// </summary>
-    public IBindingCommand<string> ClickCommand =>
-        new BindingCommand<string>(
+    public virtual Command<string> ClickCommand =>
+        new Command<string>(
             (btnContent) =>
             {
                 var eventArgs = new PubEventArgs(btnContent!, this);
@@ -134,5 +136,67 @@ public abstract class PopupContext : IEquatable<PopupContext>, IEquatable<object
     public static bool operator !=(PopupContext? left, PopupContext? right)
     {
         return left is null || right is null || left.contextIndex != right.contextIndex;
+    }
+
+    /// <summary>
+    /// a <see langword="class"/> of <see cref="Command{T}"/>
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public class Command<T> : ICommand
+    {
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        Action<string> callback;
+
+        /// <summary>
+        ///
+        /// </summary>
+        public event EventHandler? CanExecuteChanged;
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="callback"></param>
+        public Command(Action<string> callback)
+        {
+            this.callback = callback;
+        }
+
+        bool ICommand.CanExecute(object? parameter)
+        {
+            return CanExecute(parameter is string str ? str : parameter?.ToString()!);
+        }
+
+        /// <summary>
+        /// can execution
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        public virtual bool CanExecute(string? parameter)
+        {
+            return true;
+        }
+
+        void ICommand.Execute(object? parameter)
+        {
+            try
+            {
+                CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+                Execute(parameter is string str ? str : parameter?.ToString()!);
+            }
+            finally
+            {
+                CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// execution
+        /// </summary>
+        /// <param name="parameter"></param>
+        public virtual void Execute(string? parameter)
+        {
+            callback?.Invoke(parameter!);
+        }
     }
 }

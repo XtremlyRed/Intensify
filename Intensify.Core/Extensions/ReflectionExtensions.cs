@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Intensify.Core;
+namespace System.Reflection;
 
 /// <summary>
 /// reflection extensions
@@ -216,7 +216,7 @@ public static class ReflectionExtensions
     }
 
     #endregion
-     
+
     #region get/set member value
 
     /// <summary>

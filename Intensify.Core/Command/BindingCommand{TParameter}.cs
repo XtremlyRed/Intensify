@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Windows.Input;
 
-namespace Intensify.Wpf;
+namespace Intensify.Core;
 
 /// <summary>
 /// <see cref="IBindingCommand{TParameter}"/>

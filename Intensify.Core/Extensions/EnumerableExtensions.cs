@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace Intensify.Core;
+namespace System.Linq;
 
 /// <summary>
 /// enumerable extensions
@@ -19,7 +19,7 @@ public static class EnumerableExtensions
     /// <returns>
     ///   <c>true</c> if [is null or empty] [the specified source]; otherwise, <c>false</c>.
     /// </returns>
-    public static bool IsNullOrEmpty(this IEnumerable source)
+    public static bool IsNullOrEmpty(this IEnumerable? source)
     {
         if (source is null)
         {
@@ -92,18 +92,15 @@ public static class EnumerableExtensions
         {
             return array.Length == 0;
         }
-
-        if (source is IReadOnlyCollection<TSource> @readonly)
+        else if (source is IReadOnlyCollection<TSource> @readonly)
         {
             return @readonly.Count == 0;
         }
-
-        if (source is ICollection<TSource> collection)
+        else if (source is ICollection<TSource> collection)
         {
             return collection.Count == 0;
         }
-
-        if (source is ICollection collection2)
+        else if (source is ICollection collection2)
         {
             return collection2.Count == 0;
         }
@@ -197,7 +194,28 @@ public static class EnumerableExtensions
         _ = source ?? throw new ArgumentNullException(nameof(source));
         _ = filter ?? throw new ArgumentNullException(nameof(filter));
 
-        int index = 0;
+        if (source is IList<TSource> array)
+        {
+            for (int i = 0; i < array.Count; i++)
+            {
+                if (filter(array[i]))
+                {
+                    return i;
+                }
+            }
+        }
+        else if (source is IReadOnlyList<TSource> @readonly)
+        {
+            for (int i = 0; i < @readonly.Count; i++)
+            {
+                if (filter(@readonly[i]))
+                {
+                    return i;
+                }
+            }
+        }
+        var index = 0;
+
         foreach (TSource? item in source)
         {
             if (filter(item))
@@ -229,7 +247,28 @@ public static class EnumerableExtensions
         _ = source ?? throw new ArgumentNullException(nameof(source));
         _ = filter ?? throw new ArgumentNullException(nameof(filter));
 
-        int index = 0;
+        if (source is IList<TSource> array)
+        {
+            for (int i = 0; i < array.Count; i++)
+            {
+                if (filter(array[i]))
+                {
+                    yield return i;
+                }
+            }
+        }
+        else if (source is IReadOnlyList<TSource> @readonly)
+        {
+            for (int i = 0; i < @readonly.Count; i++)
+            {
+                if (filter(@readonly[i]))
+                {
+                    yield return i;
+                }
+            }
+        }
+        var index = 0;
+
         foreach (TSource? item in source)
         {
             if (filter(item))
@@ -278,21 +317,15 @@ public static class EnumerableExtensions
             {
                 action(array[i]);
             }
-
-            return;
         }
-
-        if (source is IReadOnlyList<Target> @readonly)
+        else if (source is IReadOnlyList<Target> @readonly)
         {
             for (int i = 0; i < @readonly.Count; i++)
             {
                 action(@readonly[i]);
             }
-
-            return;
         }
-
-        if (source is IList<Target> list)
+        else if (source is IList<Target> list)
         {
             for (int i = 0; i < list.Count; i++)
             {
@@ -321,50 +354,91 @@ public static class EnumerableExtensions
         {
             return;
         }
-        int index = 0;
-
-        if (source is null || action is null)
-        {
-            return;
-        }
 
         if (source is Target[] array)
         {
             for (int i = 0; i < array.Length; i++)
             {
-                action(array[i], index);
-                index++;
+                action(array[i], i);
             }
-
-            return;
         }
-
-        if (source is IReadOnlyList<Target> @readonly)
+        else if (source is IReadOnlyList<Target> @readonly)
         {
             for (int i = 0; i < @readonly.Count; i++)
             {
-                action(@readonly[i], index);
-                index++;
+                action(@readonly[i], i);
             }
-
-            return;
         }
-
-        if (source is IList<Target> list)
+        else if (source is IList<Target> list)
         {
             for (int i = 0; i < list.Count; i++)
             {
-                action(list[i], index);
-                index++;
+                action(list[i], i);
+            }
+        }
+        else
+        {
+            int index = 0;
+            foreach (Target item in source)
+            {
+                action(item, index++);
+            }
+        }
+    }
+
+    /// <summary>
+    /// for each
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="action"></param>
+    public static void ForEach(this IEnumerable source, Action<object?> action)
+    {
+        if (source is null || action is null)
+        {
+            return;
+        }
+
+        if (source is IList list)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                action(list[i]);
             }
 
             return;
         }
 
-        foreach (Target item in source)
+        foreach (var item in source)
         {
-            action(item, index);
-            index++;
+            action(item);
+        }
+    }
+
+    /// <summary>
+    /// for each
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="action"></param>
+    public static void ForEach(this IEnumerable source, Action<object?, int> action)
+    {
+        if (source is null || action is null)
+        {
+            return;
+        }
+
+        if (source is IList list)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                action(list[i], i);
+            }
+
+            return;
+        }
+        var index = 0;
+        foreach (var item in source)
+        {
+            action(item, index++);
         }
     }
 

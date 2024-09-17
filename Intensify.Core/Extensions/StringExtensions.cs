@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Intensify.Core;
+namespace System;
 
 /// <summary>
 /// string extensions
@@ -17,8 +17,6 @@ public static class StringExtensions
         return string.IsNullOrWhiteSpace(value);
     }
 
-  
- 
     /// <summary>
     /// Check if the string is not <see langword="null"/> or a whitespace character
     /// </summary>
@@ -28,13 +26,11 @@ public static class StringExtensions
         return string.IsNullOrWhiteSpace(value) == false;
     }
 
-  
-
     /// <summary>
     /// Check if the string is <see langword="null"/>or empty
     /// </summary>
     /// <param name="value">The value.</param>
-    public static bool IsNullOrEmpty(this string value)
+    public static bool IsNullOrEmpty(this string? value)
     {
         return string.IsNullOrEmpty(value);
     }
@@ -43,7 +39,7 @@ public static class StringExtensions
     /// Check if the string is not <see langword="null"/> or empty
     /// </summary>
     /// <param name="value">The value.</param>
-    public static bool IsNotNullOrEmpty(this string value)
+    public static bool IsNotNullOrEmpty(this string? value)
     {
         return string.IsNullOrEmpty(value) == false;
     }
@@ -68,18 +64,11 @@ public static class StringExtensions
     /// Joins the specified selector.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <param name="source">The source.</param>
-    /// <param name="selector">The selector.</param>
-    /// <param name="intervalSymbol">The interval symbol.</param>
+    /// <param name="source"></param>
+    /// <param name="selector"></param>
+    /// <param name="intervalSymbol"></param>
     /// <returns></returns>
-    /// 2023/12/19 15:24
-    /// <exception cref="System.ArgumentNullException">
-    /// source
-    /// or
-    /// selector
-    /// or
-    /// intervalSymbol
-    /// </exception>
+    /// <exception cref="ArgumentNullException"></exception>
     public static string Join<T>(this IEnumerable<T> source, Func<T, string> selector, string intervalSymbol = ",")
     {
         _ = source ?? throw new ArgumentNullException(nameof(source));

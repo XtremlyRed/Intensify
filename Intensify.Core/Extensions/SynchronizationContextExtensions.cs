@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Intensify.Core;
+namespace System.Threading;
+
 /// <summary>
 ///
 /// </summary>
@@ -11,14 +12,11 @@ public static class SynchronizationContextExtensions
     {
         private TaskCompletionSource<T> TaskCompletionSource = new();
 
-        public async Task WaitAsync()
+        public async Task<T> WaitAsync()
         {
-            await TaskCompletionSource.Task;
-        }
+            var result = await TaskCompletionSource.Task;
 
-        public async Task<T> WaitResultAsync()
-        {
-            return await TaskCompletionSource.Task;
+            return result;
         }
 
         public void SetResult(T value)
@@ -31,6 +29,12 @@ public static class SynchronizationContextExtensions
             TaskCompletionSource.SetException(exception);
         }
     }
+
+    record PostFuncMap<T>(Func<T> Action) : PostMapBase<T> { }
+
+    record PostFuncMapAsync<T>(Func<Task<T>> Action) : PostMapBase<T> { }
+
+    record PostFuncMapAsync(Func<Task> Action) : PostMapBase<bool> { }
 
     record PostActionMap(Action Action) : PostMapBase<bool> { }
 
@@ -70,7 +74,7 @@ public static class SynchronizationContextExtensions
         var postMap = new PostActionMap(action);
 
         context.Post(
-            o =>
+            static o =>
             {
                 if (o is PostActionMap postMap)
                 {
@@ -91,8 +95,6 @@ public static class SynchronizationContextExtensions
         await postMap.WaitAsync();
     }
 
-    record PostFuncMapAsync(Func<Task> Action) : PostMapBase<bool> { }
-
     /// <summary>
     /// Posts the asynchronous.
     /// </summary>
@@ -111,7 +113,7 @@ public static class SynchronizationContextExtensions
         var postMap = new PostFuncMapAsync(action);
 
         context.Post(
-            o =>
+            static o =>
             {
                 if (o is PostFuncMapAsync postMap)
                 {
@@ -131,8 +133,6 @@ public static class SynchronizationContextExtensions
 
         await postMap.WaitAsync();
     }
-
-    record PostFuncMapAsync<T>(Func<Task<T>> Action) : PostMapBase<T> { }
 
     /// <summary>
     /// Posts the asynchronous.
@@ -154,7 +154,7 @@ public static class SynchronizationContextExtensions
         var postMap = new PostFuncMapAsync<T>(action);
 
         context.Post(
-            async o =>
+            static async o =>
             {
                 if (o is PostFuncMapAsync<T> postMap)
                 {
@@ -172,10 +172,8 @@ public static class SynchronizationContextExtensions
             postMap
         );
 
-        return await postMap.WaitResultAsync();
+        return await postMap.WaitAsync();
     }
-
-    record PostFuncMap<T>(Func<T> Action) : PostMapBase<T> { }
 
     /// <summary>
     /// Posts the asynchronous.
@@ -215,6 +213,6 @@ public static class SynchronizationContextExtensions
             postMap
         );
 
-        return await postMap.WaitResultAsync();
+        return await postMap.WaitAsync();
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace Intensify.Core;
+namespace System.Threading;
 
 /// <summary>
 /// task  extensions

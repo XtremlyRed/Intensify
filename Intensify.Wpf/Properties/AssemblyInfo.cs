@@ -1,6 +1,6 @@
 ﻿global using System;
 global using System.Linq;
-global using Intensify.Wpf.Intarnal;
+global using Intensify.Wpf.Internal;
 global using Application = System.Windows.Application;
 global using BF = System.Reflection.BindingFlags;
 global using Binding = System.Windows.Data.Binding;
@@ -23,7 +23,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Markup;
 
 [assembly: XmlnsDefinition("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "Intensify.Wpf")]
-[assembly: XmlnsDefinition("intensify.wpf", "Intensify.Wpf")]
+[assembly: XmlnsDefinition("https://github.com/xtremlyred/intensify", "Intensify.Wpf")]
 [assembly: XmlnsPrefix("intensify.wpf", "intensify")]
 
 namespace System.Runtime.CompilerServices

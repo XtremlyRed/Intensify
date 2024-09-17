@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace Intensify.Core;
 
-
 /// <summary>
 ///
 /// </summary>

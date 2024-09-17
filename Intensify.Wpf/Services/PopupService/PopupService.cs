@@ -182,7 +182,7 @@ public class PopupService : IPopupService
     /// <param name="title"></param>
     /// <param name="config"></param>
     /// <returns></returns>
-    public async ValueTask ShowAsync(string hostedName, string content, string? title = null, PopupContext? config = null)
+    public async ValueTask ShowAsyncIn(string hostedName, string content, string? title = null, PopupContext? config = null)
     {
         _ = hostedName ?? throw new ArgumentNullException(nameof(hostedName));
 
@@ -204,7 +204,7 @@ public class PopupService : IPopupService
     /// <param name="title"></param>
     /// <param name="config"></param>
     /// <returns></returns>
-    public async ValueTask<ButtonResult> ConfirmAsync(string hostedName, string content, string? title = null, PopupContext? config = null)
+    public async ValueTask<ButtonResult> ConfirmAsyncIn(string hostedName, string content, string? title = null, PopupContext? config = null)
     {
         _ = hostedName ?? throw new ArgumentNullException(nameof(hostedName));
 
@@ -244,7 +244,7 @@ public class PopupService : IPopupService
     /// <param name="visual"></param>
     /// <param name="parameter"></param>
     /// <returns></returns>
-    public async ValueTask<T> PopupAsync<T>(string hostedName, Visual visual, PopupParameter? parameter = null)
+    public async ValueTask<T> PopupAsyncIn<T>(string hostedName, Visual visual, PopupParameter? parameter = null)
     {
         _ = hostedName ?? throw new ArgumentNullException(nameof(hostedName));
 

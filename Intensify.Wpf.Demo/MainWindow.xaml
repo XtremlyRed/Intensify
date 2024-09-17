@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dialog="clr-namespace:Intensify.Wpf.Demo.Dialog"
     xmlns:local="clr-namespace:Intensify.Wpf.Demo"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:popup="clr-namespace:Intensify.Wpf.Demo.Popup"
@@ -14,6 +15,11 @@
 
         <TabItem Header="Popup">
             <popup:PopupView />
+        </TabItem>
+
+
+        <TabItem Header="Dialog">
+            <dialog:DialogView />
         </TabItem>
     </TabControl>
 </Window>
