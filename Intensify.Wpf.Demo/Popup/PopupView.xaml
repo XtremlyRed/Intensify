@@ -13,14 +13,18 @@
 
     <AdornerDecorator ins:PopupService.HostedName="Main" ins:PopupService.IsMainHosted="True">
 
-  
+
         <UniformGrid Columns="1">
             <Button
                 Width="100"
                 Height="25"
                 Click="popup_show_Click"
                 Content="popup show" />
-
+            <Button
+                Width="100"
+                Height="25"
+                Click="popup_confirm_Click"
+                Content="popup confirm" />
             <Button
                 Width="100"
                 Height="25"
@@ -29,7 +33,7 @@
         </UniformGrid>
 
 
-      <!--<ins:PopupService.Template>
+        <!--<ins:PopupService.Template>
             <DataTemplate>
                 <Grid Background="#20000000">
 

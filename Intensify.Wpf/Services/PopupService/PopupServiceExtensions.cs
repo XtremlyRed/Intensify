@@ -14,6 +14,85 @@ namespace Intensify.Wpf;
 public static class PopupServiceExtensions
 {
     /// <summary>
+    /// show async
+    /// </summary>
+    /// <param name="popupService"></param>
+    /// <param name="content"></param>
+    /// <param name="title"></param>
+    /// <param name="buttonContents"></param>
+    /// <returns></returns>
+    public static async ValueTask ShowAsync(this IPopupService popupService, string content, string? title = null, params string[] buttonContents)
+    {
+        PopupContext context = buttonContents;
+        await popupService.ShowAsync(content, title, context);
+    }
+
+    /// <summary>
+    /// show async
+    /// </summary>
+    /// <param name="popupService"></param>
+    /// <param name="content"></param>
+    /// <param name="title"></param>
+    /// <param name="buttonContents"></param>
+    /// <returns></returns>
+    public static async ValueTask<ButtonResult> ConfirmAsync(
+        this IPopupService popupService,
+        string content,
+        string? title = null,
+        params string[] buttonContents
+    )
+    {
+        PopupContext context = buttonContents;
+        var result = await popupService.ConfirmAsync(content, title, context);
+
+        return result;
+    }
+
+    /// <summary>
+    ///  show async in <paramref name="hostedName"/>
+    /// </summary>
+    /// <param name="popupService"></param>
+    /// <param name="hostedName"></param>
+    /// <param name="content"></param>
+    /// <param name="title"></param>
+    /// <param name="buttonContents"></param>
+    /// <returns></returns>
+    public static async ValueTask ShowAsyncIn(
+        this IPopupService popupService,
+        string hostedName,
+        string content,
+        string? title = null,
+        params string[] buttonContents
+    )
+    {
+        PopupContext context = buttonContents;
+        await popupService.ShowAsyncIn(hostedName, content, title, context);
+    }
+
+    /// <summary>
+    /// show async in <paramref name="hostedName"/>
+    /// </summary>
+    /// <param name="popupService"></param>
+    /// <param name="content"></param>
+    /// <param name="hostedName"></param>
+    /// <param name="title"></param>
+    /// <param name="buttonContents"></param>
+    /// <returns></returns>
+    public static async ValueTask<ButtonResult> ConfirmAsyncIn(
+        this IPopupService popupService,
+        string content,
+        string hostedName,
+        string? title = null,
+        params string[] buttonContents
+    )
+    {
+        PopupContext context = buttonContents;
+        var result = await popupService.ConfirmAsyncIn(hostedName, content, title, context);
+
+        return result;
+    }
+
+    /// <summary>
     /// popup visual in main popup host
     /// </summary>
     /// <param name="popupService"></param>

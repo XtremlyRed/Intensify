@@ -38,5 +38,10 @@ namespace Intensify.Wpf.Demo.Popup
 
             await popupService.PopupAsync<object>(visual);
         }
+
+        private async void popup_confirm_Click(object sender, RoutedEventArgs e)
+        {
+            await popupService.ConfirmAsync("测试", null, new[] { "确定", "取消" });
+        }
     }
 }

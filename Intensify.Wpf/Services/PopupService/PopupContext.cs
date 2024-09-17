@@ -16,6 +16,9 @@ public abstract class PopupContext : IEquatable<PopupContext>, IEquatable<object
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private readonly int contextIndex;
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    static ButtonResult[] buttonResults = new[] { ButtonResult.Yes, ButtonResult.No, ButtonResult.Cancel };
+
     /// <summary>
     ///
     /// </summary>
@@ -75,6 +78,7 @@ public abstract class PopupContext : IEquatable<PopupContext>, IEquatable<object
     internal static PopupContext GetDefault(int buttonCount = 3)
     {
         var defaultConfig = new InnerPopupConfig();
+
         if (buttonCount > 0)
             defaultConfig.AddButton("Yes", ButtonResult.Yes);
         if (buttonCount > 1)
@@ -136,6 +140,44 @@ public abstract class PopupContext : IEquatable<PopupContext>, IEquatable<object
     public static bool operator !=(PopupContext? left, PopupContext? right)
     {
         return left is null || right is null || left.contextIndex != right.contextIndex;
+    }
+
+    /// <summary>
+    /// create by button content
+    /// </summary>
+    /// <param name="buttonContents"></param>
+    public static implicit operator PopupContext(string[] buttonContents)
+    {
+        _ = buttonContents is null || buttonContents.Length == 0 ? throw new ArgumentException("invalid button contents") : 0;
+
+        _ = buttonContents.Length > 3 ? throw new ArgumentException("too long") : 0;
+
+        var inner = new InnerPopupConfig();
+
+        for (int i = 0; i < buttonContents.Length; i++)
+        {
+            inner.AddButton(buttonContents[i], PopupContext.buttonResults[i]);
+        }
+
+        return inner;
+    }
+
+    /// <summary>
+    /// create by button content
+    /// </summary>
+    /// <param name="buttonContexts"></param>
+    public static implicit operator PopupContext(Dictionary<ButtonResult, string> buttonContexts)
+    {
+        _ = buttonContexts is null || buttonContexts.Count == 0 ? throw new ArgumentException("invalid button contents") : 0;
+
+        var inner = new InnerPopupConfig();
+
+        foreach (var item in buttonContexts)
+        {
+            inner.AddButton(item.Value, item.Key);
+        }
+
+        return inner;
     }
 
     /// <summary>

@@ -19,7 +19,7 @@
 
 
         <TabItem Header="Dialog">
-            <dialog:DialogView />
+            <!--<dialog:DialogView />-->
         </TabItem>
     </TabControl>
 </Window>

@@ -164,7 +164,7 @@ public class PopupService : IPopupService
     {
         var mainHost = GetMainHost(null!, true);
 
-        PopupContext cfg = config ?? PopupContext.GetDefault(1);
+        PopupContext cfg = config ?? PopupContext.GetDefault(3);
 
         cfg.Content = content;
         cfg.Title = title ?? cfg.Title ?? "Inotification";
