@@ -482,6 +482,184 @@ public static class EnumerableExtensions
             yield return ARRAY;
         }
     }
+
+    /// <summary>
+    /// returns the maximum value in a generic sequence according to a specified key selector function.
+    /// </summary>
+    /// <typeparam name="TSource"></typeparam>
+    /// <typeparam name="TKey"></typeparam>
+    /// <param name="source"></param>
+    /// <param name="keySelector"></param>
+    /// <param name="comparer"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static TSource? MaxBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer = null)
+    {
+        _ = source ?? throw new ArgumentNullException(nameof(source));
+        _ = keySelector ?? throw new ArgumentNullException(nameof(keySelector));
+
+        comparer ??= Comparer<TKey>.Default;
+
+        using IEnumerator<TSource> e = source.GetEnumerator();
+
+        if (e.MoveNext() == false)
+        {
+            throw new ArgumentNullException("source contains no elements");
+        }
+
+        TSource value = e.Current;
+        TKey key = keySelector(value);
+
+        if (default(TKey) is null)
+        {
+            if (key is null)
+            {
+                TSource firstValue = value;
+
+                do
+                {
+                    if (e.MoveNext() == false)
+                    {
+                        return firstValue;
+                    }
+
+                    value = e.Current;
+                    key = keySelector(value);
+                } while (key is null);
+            }
+
+            while (e.MoveNext())
+            {
+                TSource nextValue = e.Current;
+                TKey nextKey = keySelector(nextValue);
+                if (nextKey is not null && comparer.Compare(nextKey, key) > 0)
+                {
+                    key = nextKey;
+                    value = nextValue;
+                }
+            }
+        }
+        else
+        {
+            if (comparer == Comparer<TKey>.Default)
+            {
+                while (e.MoveNext())
+                {
+                    TSource nextValue = e.Current;
+                    TKey nextKey = keySelector(nextValue);
+                    if (Comparer<TKey>.Default.Compare(nextKey, key) > 0)
+                    {
+                        key = nextKey;
+                        value = nextValue;
+                    }
+                }
+            }
+            else
+            {
+                while (e.MoveNext())
+                {
+                    TSource nextValue = e.Current;
+                    TKey nextKey = keySelector(nextValue);
+                    if (comparer.Compare(nextKey, key) > 0)
+                    {
+                        key = nextKey;
+                        value = nextValue;
+                    }
+                }
+            }
+        }
+
+        return value;
+    }
+
+    /// <summary>
+    /// returns the minimum value in a generic sequence according to a specified key selector function.
+    /// </summary>
+    /// <typeparam name="TSource"></typeparam>
+    /// <typeparam name="TKey"></typeparam>
+    /// <param name="source"></param>
+    /// <param name="keySelector"></param>
+    /// <param name="comparer"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static TSource? MinBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer = null)
+    {
+        _ = source ?? throw new ArgumentNullException(nameof(source));
+        _ = keySelector ?? throw new ArgumentNullException(nameof(keySelector));
+
+        comparer ??= Comparer<TKey>.Default;
+
+        using IEnumerator<TSource> e = source.GetEnumerator();
+
+        if (e.MoveNext() == false)
+        {
+            throw new ArgumentNullException("source contains no elements");
+        }
+
+        TSource value = e.Current;
+        TKey key = keySelector(value);
+
+        if (default(TKey) is null)
+        {
+            if (key is null)
+            {
+                TSource firstValue = value;
+
+                do
+                {
+                    if (!e.MoveNext())
+                    {
+                        return firstValue;
+                    }
+
+                    value = e.Current;
+                    key = keySelector(value);
+                } while (key is null);
+            }
+
+            while (e.MoveNext())
+            {
+                TSource nextValue = e.Current;
+                TKey nextKey = keySelector(nextValue);
+                if (nextKey is not null && comparer.Compare(nextKey, key) < 0)
+                {
+                    key = nextKey;
+                    value = nextValue;
+                }
+            }
+        }
+        else
+        {
+            if (comparer == Comparer<TKey>.Default)
+            {
+                while (e.MoveNext())
+                {
+                    TSource nextValue = e.Current;
+                    TKey nextKey = keySelector(nextValue);
+                    if (Comparer<TKey>.Default.Compare(nextKey, key) < 0)
+                    {
+                        key = nextKey;
+                        value = nextValue;
+                    }
+                }
+            }
+            else
+            {
+                while (e.MoveNext())
+                {
+                    TSource nextValue = e.Current;
+                    TKey nextKey = keySelector(nextValue);
+                    if (comparer.Compare(nextKey, key) < 0)
+                    {
+                        key = nextKey;
+                        value = nextValue;
+                    }
+                }
+            }
+        }
+
+        return value;
+    }
 #endif
 
     /// <summary>

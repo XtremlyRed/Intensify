@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Drawing.Printing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -16,36 +17,93 @@ namespace Intensify.Wpf;
 public class PopupService : IPopupService
 {
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private static readonly ConcurrentDictionary<string, HostedStorage> hostedStorages = new();
+    private static readonly ConcurrentDictionary<string, PopupHosted> hostedStorages = new();
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     internal static EasyEvent<PubEventArgs> eventService = new();
 
     /// <summary>
-    /// get show/confirm display template
+    /// get show/confirm popup template
+    /// example template
+    /// <code>
+    /// &lt;UserControl&gt;
+    ///    &lt;Grid&gt;
+    ///        &lt;TextBlock Text="{binding Title}"&gt;
+    ///        &lt;TextBlock Text="{binding Content}"&gt;
+    ///        &lt;ItemsControl ItemsSource="{binding Buttons}"&gt;
+    ///            &lt;ItemsControl.ItemTemplate&gt;
+    ///                &lt;DataTemplate&gt;
+    ///                    &lt;Button
+    ///                        Command="{Binding DataContext.ClickCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType=ItemsControl}}"
+    ///                        CommandParameter="{Binding}"
+    ///                        Content="{Binding}"/&gt;
+    ///                &lt;/DataTemplate &gt;
+    ///            &lt;/ItemsControl.ItemTemplate&gt;
+    ///        &lt;/ItemsControl&gt;
+    ///    &lt;/Grid&gt;
+    /// &lt;/UserControl&gt;
+    /// </code>
     /// </summary>
     /// <param name="adornerDecorator"></param>
     /// <returns></returns>
-    public static DataTemplate GetTemplate(AdornerDecorator adornerDecorator)
+    public static DataTemplate GetPopupTemplate(AdornerDecorator adornerDecorator)
     {
-        return (DataTemplate)adornerDecorator.GetValue(TemplateProperty);
+        return (DataTemplate)adornerDecorator.GetValue(PopupTemplateProperty);
     }
 
     /// <summary>
-    /// set show/confirm display template
+    /// set show/confirm popup template
+    /// example template
+    /// <code>
+    /// &lt;UserControl&gt;
+    ///    &lt;Grid&gt;
+    ///        &lt;TextBlock Text="{binding Title}"&gt;
+    ///        &lt;TextBlock Text="{binding Content}"&gt;
+    ///        &lt;ItemsControl ItemsSource="{binding Buttons}"&gt;
+    ///            &lt;ItemsControl.ItemTemplate&gt;
+    ///                &lt;DataTemplate&gt;
+    ///                    &lt;Button
+    ///                        Command="{Binding DataContext.ClickCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType=ItemsControl}}"
+    ///                        CommandParameter="{Binding}"
+    ///                        Content="{Binding}"/&gt;
+    ///                &lt;/DataTemplate &gt;
+    ///            &lt;/ItemsControl.ItemTemplate&gt;
+    ///        &lt;/ItemsControl&gt;
+    ///    &lt;/Grid&gt;
+    /// &lt;/UserControl&gt;
+    /// </code>
     /// </summary>
     /// <param name="adornerDecorator"></param>
     /// <param name="value"></param>
-    public static void SetTemplate(AdornerDecorator adornerDecorator, DataTemplate value)
+    public static void SetPopupTemplate(AdornerDecorator adornerDecorator, DataTemplate value)
     {
-        adornerDecorator.SetValue(TemplateProperty, value);
+        adornerDecorator.SetValue(PopupTemplateProperty, value);
     }
 
     /// <summary>
-    /// show/confirm display template
+    /// show/confirm popup template
+    /// example template
+    /// <code>
+    /// &lt;UserControl&gt;
+    ///    &lt;Grid&gt;
+    ///        &lt;TextBlock Text="{binding Title}"&gt;
+    ///        &lt;TextBlock Text="{binding Content}"&gt;
+    ///        &lt;ItemsControl ItemsSource="{binding Buttons}"&gt;
+    ///            &lt;ItemsControl.ItemTemplate&gt;
+    ///                &lt;DataTemplate&gt;
+    ///                    &lt;Button
+    ///                        Command="{Binding DataContext.ClickCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType=ItemsControl}}"
+    ///                        CommandParameter="{Binding}"
+    ///                        Content="{Binding}"/&gt;
+    ///                &lt;/DataTemplate &gt;
+    ///            &lt;/ItemsControl.ItemTemplate&gt;
+    ///        &lt;/ItemsControl&gt;
+    ///    &lt;/Grid&gt;
+    /// &lt;/UserControl&gt;
+    /// </code>
     /// </summary>
-    public static readonly DependencyProperty TemplateProperty = DependencyProperty.RegisterAttached(
-        "Template",
+    public static readonly DependencyProperty PopupTemplateProperty = DependencyProperty.RegisterAttached(
+        "PopupTemplate",
         typeof(DataTemplate),
         typeof(PopupService),
         new PropertyMetadata(null)
@@ -82,22 +140,23 @@ public class PopupService : IPopupService
             null,
             static (s, e) =>
             {
-                if (s is AdornerDecorator adornerDecorator)
+                if (s is not AdornerDecorator adornerDecorator)
                 {
-                    if (e.OldValue is string oldHostedName)
-                    {
-                        _ = hostedStorages.TryRemove(oldHostedName, out _);
-                    }
-
-                    if (e.NewValue is not string hostedName)
-                    {
-                        return;
-                    }
-                    WeakReference weak = new(adornerDecorator);
-                    ContentControl content = new();
-
-                    hostedStorages[hostedName] = new HostedStorage(weak);
+                    return;
                 }
+
+                if (e.OldValue is string oldHostedName)
+                {
+                    _ = hostedStorages.TryRemove(oldHostedName, out _);
+                }
+
+                if (e.NewValue is not string hostedName)
+                {
+                    return;
+                }
+                WeakReference weak = new(adornerDecorator);
+
+                hostedStorages[hostedName] = new PopupHosted(weak);
             }
         )
     );
@@ -143,7 +202,7 @@ public class PopupService : IPopupService
     /// <returns></returns>
     public async ValueTask ShowAsync(string content, string? title = null, PopupContext? config = null)
     {
-        HostedStorage mainHost = GetMainHost(null!, true);
+        PopupHosted mainHost = GetMainHost(null!, true);
 
         PopupContext cfg = config ?? PopupContext.GetDefault(1);
 
@@ -255,9 +314,9 @@ public class PopupService : IPopupService
         return popupResult;
     }
 
-    private HostedStorage GetMainHost(string targetHostedName, bool isHosted)
+    private PopupHosted GetMainHost(string targetHostedName, bool isHosted)
     {
-        foreach (KeyValuePair<string, HostedStorage> item in hostedStorages)
+        foreach (KeyValuePair<string, PopupHosted> item in hostedStorages)
         {
             if (item.Value.Reference.Target is AdornerDecorator decorator)
             {
@@ -283,7 +342,7 @@ public class PopupService : IPopupService
 
     internal record PubEventArgs(string content, PopupContext Context);
 
-    private record HostedStorage(WeakReference Reference)
+    private record PopupHosted(WeakReference Reference)
     {
         private readonly SemaphoreSlim semaphore = new(1, 1);
 
@@ -300,7 +359,7 @@ public class PopupService : IPopupService
 
                 UIElement uielement = default!;
 
-                DataTemplate? datatemplate = GetTemplate(decorator);
+                DataTemplate? datatemplate = GetPopupTemplate(decorator);
 
                 if (datatemplate is not null)
                 {
@@ -340,7 +399,6 @@ public class PopupService : IPopupService
 
                         if (context.buttonResult.TryGetValue(buttonContent, out ButtonResult bottonResult))
                         {
-                            //return button result;
                             return bottonResult;
                         }
 

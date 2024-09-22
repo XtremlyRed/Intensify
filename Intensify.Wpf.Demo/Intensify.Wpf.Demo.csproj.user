@@ -10,6 +10,9 @@
     <Compile Update="Dialog\DialogView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Notify\NotifyView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Popup\PopupContent.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -22,6 +25,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Notify\NotifyView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Popup\PopupContent.xaml">

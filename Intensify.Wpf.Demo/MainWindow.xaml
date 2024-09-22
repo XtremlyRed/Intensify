@@ -6,13 +6,16 @@
     xmlns:dialog="clr-namespace:Intensify.Wpf.Demo.Dialog"
     xmlns:local="clr-namespace:Intensify.Wpf.Demo"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:notify="clr-namespace:Intensify.Wpf.Demo.Notify"
     xmlns:popup="clr-namespace:Intensify.Wpf.Demo.Popup"
     Title="MainWindow"
     Width="800"
     Height="450"
     mc:Ignorable="d">
     <TabControl>
-
+        <TabItem Header="Notify">
+            <notify:NotifyView />
+        </TabItem>
         <TabItem Header="Popup">
             <popup:PopupView />
         </TabItem>
@@ -21,5 +24,7 @@
         <TabItem Header="Dialog">
             <!--<dialog:DialogView />-->
         </TabItem>
+
+
     </TabControl>
 </Window>
